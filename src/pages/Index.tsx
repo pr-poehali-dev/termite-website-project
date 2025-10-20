@@ -6,6 +6,18 @@ import Icon from "@/components/ui/icon";
 
 const Index = () => {
   const [activeSection, setActiveSection] = useState("ecology");
+  const [showAnt, setShowAnt] = useState<{ x: number; y: number } | null>(null);
+
+  const handleImageHover = (e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    setShowAnt({ x, y });
+    
+    setTimeout(() => {
+      setShowAnt(null);
+    }, 1000);
+  };
 
   const sections = [
     {
@@ -134,11 +146,28 @@ const Index = () => {
 
                 <div className="space-y-4">
                   <Card className="overflow-hidden border-2 hover:shadow-xl transition-shadow">
-                    <img 
-                      src={section.image} 
-                      alt={section.title}
-                      className="w-full h-[400px] object-cover"
-                    />
+                    <div 
+                      className="relative cursor-pointer"
+                      onMouseMove={handleImageHover}
+                    >
+                      <img 
+                        src={section.image} 
+                        alt={section.title}
+                        className="w-full h-[400px] object-cover"
+                      />
+                      {showAnt && (
+                        <div 
+                          className="absolute pointer-events-none animate-fade-in"
+                          style={{ 
+                            left: `${showAnt.x}px`, 
+                            top: `${showAnt.y}px`,
+                            transform: 'translate(-50%, -50%)'
+                          }}
+                        >
+                          <div className="text-4xl animate-pulse">🐜</div>
+                        </div>
+                      )}
+                    </div>
                     <CardContent className="p-4">
                       <div className="flex flex-wrap gap-2">
                         <Badge variant="secondary" className="text-xs">
